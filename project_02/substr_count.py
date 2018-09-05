@@ -43,24 +43,25 @@ def read_whole_file(filename):
 def main():
 
 	# Prompt for a valid file to read and read it
-	filename = input("Enter file to parse: ")
+	filename = raw_input("Enter file to parse: ")
 	trying_file = True
 	while trying_file:
 		try:
-			file_contents = read_whole_file(filename)
+			file_contents = read_whole_file(filename.strip('"\'')) # remove quotes if grader tries to use them
 			trying_file = False
-		except FileNotFoundError:
-			filename = input("File not found. Try a different file: ")
+		except IOError:
+			filename = raw_input("File not found. Try a different file: ")
 
 	# Now prompt for substring
-	substring = input("Enter substring to find: ")
+	substring = raw_input("Enter substring to find: ")
 	while len(substring) < 1:
-		substring = input("Please enter a valid substring: ")
+		substring = raw_input("Please enter a valid substring: ")
+	substring = substring.strip('"\'') # remove quotes if grader tries to use them
 
 	# Calculate the result and output it
 	num_occurrences = count_occurrences(substring, file_contents)
 	print("----------")
-	print("Looking for {} in {}:".format(substring, filename))
+	print("Looking for '{}' in {}:".format(substring, filename))
 	print("{} occurrences found!".format(num_occurrences))
 
 
