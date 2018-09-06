@@ -8,10 +8,12 @@ Due: 9/14/2018
 '''
 
 from nltk.corpus import inaugural
+import matplotlib.pyplot as plt
 import re
 
 def write_address_file(address):
 	with open(address, 'w') as fout:
+		#join all the words in each  sentence 
 		for sent in inaugural.sents(address):
 			sent = ' '.join(sent)
 			fout.write(sent + '\n')
@@ -39,23 +41,40 @@ def tokenize_address(address):
 
 
 
-
-
 def main():
 	#get files
-	filed_ids = inaugural.fileids()
+	file_ids = inaugural.fileids()
 
-	#write out all files 
+	#open output file
 	with open('proj3.txt', 'w') as fout:
-		for address in filed_ids:
+		#loop through all inaugural addresses
+		for address in file_ids:
+			#write each address to file
 			write_address_file(address)
+			#tokenize each address, prepend the year, append a newline, and write to output
 			string = tokenize_address(address)
 			string = address[:4] + ' ' + string + '\n'
 			fout.write(string)
 
+	search = 'people'
+	years = []
+	counts = []
+	with open('proj3.txt', 'r') as fin:
+		for address in fin:
+			words = address.split(' ');
+			year = int(words[0])
+			years.append(year)
+			count = 0
+			for word in words[1:]:
+				if word == search:
+					count = count + 1
+			counts.append(count)
 
-	#tokenize address files and combine into 1 file
-	
+	print(years)
+	plt.plot(years,counts)
+	plt.show()
+
+
 
 
 
