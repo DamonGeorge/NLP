@@ -24,53 +24,44 @@ def tokenize_address(address):
 		string = re.sub('\n',' ', fin.read())
 		
 	string = string.lower()
-
-	#create a list containing all lower case characters
-	good_chars = [chr(value) for value in range(ord('a'),ord('z') + 1,1)]
-	good_chars.append(' ')
-   
-	new_str = ''
-	for ch in string:
-		if ch in good_chars:
-			new_str = new_str + ch
-	
-
-	#or just use:
-	#re.sub(r'[^a-z ]', '', string)
+	new_str = re.sub(r'[^a-z ]', ' ', string)
 	return new_str
 
 
-
 def main():
+	search = input("Enter word to search: ")
+	search.strip('"\'') # remove quotes if grader tries to use them
+	search.lower();
+
 	#get files
 	file_ids = inaugural.fileids()
+	
+	years = []
+	counts = []
 
 	#open output file
 	with open('proj3.txt', 'w') as fout:
 		#loop through all inaugural addresses
 		for address in file_ids:
+			#add year to list
+			years.append(int(address[:4]))
 			#write each address to file
 			write_address_file(address)
 			#tokenize each address, prepend the year, append a newline, and write to output
 			string = tokenize_address(address)
-			string = address[:4] + ' ' + string + '\n'
+			string = string + '\n'
 			fout.write(string)
-
-	search = 'people'
-	years = []
-	counts = []
+	
 	with open('proj3.txt', 'r') as fin:
 		for address in fin:
 			words = address.split(' ');
-			year = int(words[0])
-			years.append(year)
+			print(words[:10])
 			count = 0
-			for word in words[1:]:
+			for word in words:
 				if word == search:
 					count = count + 1
 			counts.append(count)
 
-	print(years)
 	plt.plot(years,counts)
 	plt.show()
 
