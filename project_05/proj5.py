@@ -10,7 +10,7 @@ Due: 9/28/2018
 
 #import required modules
 import sys
-from enum import Enum
+
 
 def print_matrix(matrix):
 	rows = len(matrix)
@@ -20,10 +20,6 @@ def print_matrix(matrix):
 		for j in range(cols):
 			print(f'{matrix[i][j]:2}, ', end='')
 		print('')
-
-
-
-
 
 
 
