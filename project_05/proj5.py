@@ -169,7 +169,7 @@ def get_alignment(operation_matrix):
 	operations = []
 	
 	# loop until we have reached the start of the operation matrix
-	while(i != 0 and j != 0):
+	while(i != 0 or j != 0):
 		# current operation
 		current = operation_matrix[i][j]
 
@@ -271,11 +271,13 @@ def main():
 	# print everything
 	print("alignment: ")
 	print_matrix(min_edit_dist_matrix)
+	print("operations: ")
+	print(operations)
 	print(f"Minimum Edit Distance: {min_edit_dist_matrix[m][n]}")
 	print('')
 	print("Alignment: ")
-	print('')
 	print_alignment(operations, source, target)
+	print('')
 
 
 if __name__ == "__main__":
