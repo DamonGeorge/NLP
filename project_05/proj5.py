@@ -22,11 +22,9 @@ def print_matrix(matrix):
 		print('')
 
 
-
-
 class Operation:
 	'''
-	Constants for Operation Type. Used in the alignment matrices
+	Constants for Operation Type. Used in the operation matrices
 	'''
 	SUBSTITUTION = 0
 	INSERT = 1
@@ -142,17 +140,19 @@ def calc_matrices(edit_dist_matrix, operation_matrix, source, target):
 				operation_matrix[i][j] = Operation.DELETE
 
 
-def get_alignment(operation_matrix):
+def print_alignment(operation_matrix, source, target):
 	'''
-	Returns list holding every operation used to align source and target
+	Prints the pretty alignment of the source and target as shown
+	in Jurafsky and Martin
 	
 	Parameters:
-		operation_matrix: 2d list used to hold all operations used in 
-			calculating min edit distance
+		operation_matrix: 2d list used to hold all operations used to 
+			calculate min edit distance matrix
+		source: source string
+		target: target string
 
 	Returns:
-		list of operations used to convert source to target using
-		min edit distance algorithm
+		nothing - just prints alignment to screent
 	'''
 
 	rows, cols = get_matrix_dimensions(operation_matrix)
@@ -161,68 +161,25 @@ def get_alignment(operation_matrix):
 	i = rows-1
 	j = cols-1
 
-	# list to hold operations for the computed alignment
-	operations = []
+	# indices to hold where in source and target we are
+	src_index = len(source) - 1;
+	tar_index = len(target) - 1;
+
+	# the 4 lines of the alignment printout
+	line1 = ""
+	line2 = ""
+	line3 = ""
+	line4 = ""
 	
 	# loop until we have reached the start of the operation matrix
 	while(i != 0 or j != 0):
 		# current operation
 		current = operation_matrix[i][j]
 
+		# add pipe for each operation
+		line2 += "|"
+
 		if current == Operation.SUBSTITUTION:
-			# add operation to operations list and move diagonally through matrix
-			operations.append(Operation.SUBSTITUTION)
-			i = i - 1
-			j = j - 1
-		elif current == Operation.INSERT:
-			# add operation to operations list and move left through matrix
-			operations.append(Operation.INSERT)
-			j = j - 1
-		elif current == Operation.DELETE:
-			# add operation to operations list and move up through matrix
-			operations.append(2)
-			i = i - 1
-			
-	operations.reverse() #reverse so list starts with first operation
-	return operations
-
-def print_alignment(operations, source, target) :
-	'''
-	Prints the pretty alignment of the source and target as shown
-	in Jurafsky and Martin
-	
-	Parameters:
-		operations: list holding operations to convert source to target
-
-	Returns:
-		nothing - just prints alignment to screent
-	'''
-
-	# indices to hold where in src and tar we are
-	src_index = 0;
-	tar_index = 0;
-
-	# the 4 lines of the alignment printout
-	line1 = ""
-	line2 = '|' * len(operations)
-	line3 = ""
-	line4 = ""
-
-	#loop through alignment
-	for i in range(len(operations)):
-		if operations[i] == Operation.INSERT:
-			# insert * into line 1 and print char from target
-			line1 += "*"
-			line3 += target[tar_index]
-			tar_index += 1
-			line4 += "i"
-		elif operations[i] == Operation.DELETE:
-			# print char from source and insert # into line 3
-			line1 += source[src_index]
-			src_index += 1
-			line3 += "*"
-			line4 += "d"
-		else :
 			# print char from both source and target
 			line1 += source[src_index]
 			line3 += target[tar_index]
@@ -232,15 +189,37 @@ def print_alignment(operations, source, target) :
 				line4 += "s"
 			else :
 				line4 += " "
-			src_index += 1
-			tar_index += 1
+			src_index -= 1
+			tar_index -= 1
 
+			# move diagonally through matrix
+			i = i - 1
+			j = j - 1
+		elif current == Operation.INSERT:
+			# insert * into line 1 and print char from target
+			line1 += "*"
+			line3 += target[tar_index]
+			tar_index -= 1
+			line4 += "i"
 
-	# print the 4 lines
-	print(line1)
+			# move left through matrix
+			j = j - 1
+		elif current == Operation.DELETE:
+			# print char from source and insert * into line 3
+			line1 += source[src_index]
+			src_index -= 1
+			line3 += "*"
+			line4 += "d"
+
+			# move up through matrix
+			i = i - 1
+	
+	# print lines reversed
+	print(line1[::-1])
 	print(line2)
-	print(line3)
-	print(line4)
+	print(line3[::-1])
+	print(line4[::-1])
+
 
 def main():
 	# get command line inputs: source and target strings
@@ -261,18 +240,13 @@ def main():
 	# fill in the rest of the two matrices
 	calc_matrices(min_edit_dist_matrix, operation_matrix, source, target)
 
-	# get list of operations to align source and target
-	operations = get_alignment(operation_matrix)
-
 	# print everything
 	print("alignment: ")
 	print_matrix(min_edit_dist_matrix)
-	print("operations: ")
-	print(operations)
 	print(f"Minimum Edit Distance: {min_edit_dist_matrix[m][n]}")
 	print('')
 	print("Alignment: ")
-	print_alignment(operations, source, target)
+	print_alignment(operation_matrix, source, target)
 	print('')
 
 
