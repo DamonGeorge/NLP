@@ -5,7 +5,7 @@ Team Member #2: Damon George
 Zagmail address for team member 1: rbrajcich@zagmail.gonzaga.edu
 Project 4: Computes the minimum edit distance between two input strings and 
 		displays the alignment of the strings.
-Due: 9/28/2018
+Due: 10/5/2018
 '''
 
 #import required modules
@@ -18,7 +18,7 @@ def print_matrix(matrix):
 
 	for i in range(rows):
 		for j in range(cols):
-			print(f'{matrix[i][j]:2}, ', end='')
+			print('{:2}, '.format(matrix[i][j]), end='')
 		print('')
 
 
@@ -243,7 +243,7 @@ def main():
 	# print everything
 	print("alignment: ")
 	print_matrix(min_edit_dist_matrix)
-	print(f"Minimum Edit Distance: {min_edit_dist_matrix[m][n]}")
+	print("Minimum Edit Distance: " + str(min_edit_dist_matrix[m][n]))
 	print('')
 	print("Alignment: ")
 	print_alignment(operation_matrix, source, target)
