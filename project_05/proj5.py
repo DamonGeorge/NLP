@@ -3,24 +3,13 @@ WRITTEN FOR PYTHON 3
 Team Member #1: Robert Brajcich
 Team Member #2: Damon George
 Zagmail address for team member 1: rbrajcich@zagmail.gonzaga.edu
-Project 4: Computes the minimum edit distance between two input strings and 
+Project 5: Computes the minimum edit distance between two input strings and 
 		displays the alignment of the strings.
 Due: 10/5/2018
 '''
 
 #import required modules
 import sys
-
-
-def print_matrix(matrix):
-	rows = len(matrix)
-	cols = len(matrix[0])
-
-	for i in range(rows):
-		for j in range(cols):
-			print('{:2}, '.format(matrix[i][j]), end='')
-		print('')
-
 
 class Operation:
 	'''
@@ -241,8 +230,6 @@ def main():
 	calc_matrices(min_edit_dist_matrix, operation_matrix, source, target)
 
 	# print everything
-	print("alignment: ")
-	print_matrix(min_edit_dist_matrix)
 	print("Minimum Edit Distance: " + str(min_edit_dist_matrix[m][n]))
 	print('')
 	print("Alignment: ")
