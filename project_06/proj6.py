@@ -29,7 +29,7 @@ def keep_token(token):
 	Takes a single token and returns False if it should be discarded, 
 	otherwise true
 	'''
-	return token.isalpha()
+	return '.' not in token
 
 def get_all_tokens():
 	'''
