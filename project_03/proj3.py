@@ -1,4 +1,5 @@
 '''
+WRITTEN FOR PYTHON 3
 Team Member #1: Robert Brajcich
 Team Member #2: Damon George
 Zagmail address for team member 1: rbrajcich@zagmail.gonzaga.edu
@@ -12,7 +13,6 @@ import matplotlib.pyplot as plt
 import pickle
 
 
-
 def main():
 
 	#Load pickled list of addresses
@@ -24,7 +24,7 @@ def main():
 	search.strip('"\'') # remove quotes if grader tries to use them
 	search.lower();		# lower since tokenizing lowers all letters in the addresses
 
-	#dict to holde year:count
+	#dict to hold year:count
 	word_frequency = {}
 
 	#loop through each address

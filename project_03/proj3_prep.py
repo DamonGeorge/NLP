@@ -1,4 +1,5 @@
 '''
+WRITTEN FOR PYTHON 3
 Team Member #1: Robert Brajcich
 Team Member #2: Damon George
 Zagmail address for team member 1: rbrajcich@zagmail.gonzaga.edu
