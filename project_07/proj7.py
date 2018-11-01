@@ -52,6 +52,11 @@ def parse_tokens():
 	return tokens
 
 
+
+
+
+
+
 def count_ngrams(all_words, N):
 	'''
 	Counts ngrams - NOT for unigrams
@@ -129,7 +134,27 @@ def calc_start_ngram_frequencies(sentence_start_ngrams, ngram_cumulative_freqs):
 
 	return sentence_start_ngram_cumulative_freqs
 
-def create_frequencies(type_counts, total_tokens):
+
+
+
+
+
+def count_unigrams(all_words):
+	'''
+	Takes a list of tokens and generates a frequency map 
+	in the format: {'token': occurrences}
+	'''
+	unigram_counts = {}
+
+	for word in all_words:
+		if word in unigram_counts:
+			unigram_counts[word] += 1
+		else:
+			unigram_counts[word] = 1
+
+	return unigram_counts
+
+def calc_unigram_frequencies(unigram_counts, total_unigrams):
 	'''
 	Using a frequency map and total token count, generates an ordered
 	dict in the format {cumulative_probability: 'token'}
@@ -139,12 +164,23 @@ def create_frequencies(type_counts, total_tokens):
 
 	# for each type, calculate frequency -> cumulative probability,
 	# and add to the ordered dict
-	for typ in type_counts.iterkeys():
-		type_freq = type_counts[typ] / total_tokens
+	for typ in unigram_counts.iterkeys():
+		type_freq = unigram_counts[typ] / total_unigrams
 		cumulative_count += type_freq
 		frequencies[cumulative_count] = typ
 
 	return frequencies
+
+
+
+
+
+
+
+
+
+
+
 
 def generate_word(frequencies):
 	'''
@@ -169,6 +205,14 @@ def generate_sentence(frequencies):
 
 	sentence += '.'
 	return sentence
+
+
+
+
+
+
+
+
 
 def main():
 	# get lowercase list of all words
