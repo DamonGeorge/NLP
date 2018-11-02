@@ -17,231 +17,206 @@ from collections import OrderedDict
 import random
 import re
 
+START_TAG = '<s>'
+END_TAG = '</s>'
 
-def normalize_token(token):
+def normalize_line(line):
 	'''
-	Takes a single token and converts it to ascii and lowercase letters
+	Takes a string, converts it to lowercase, and removes
+	any non-alphabetic characters except quotes
 	'''
-	token = token.encode('ascii')
-	token = token.lower()
-	token = re.sub(r'[^a-z\']', '', token)
-	return token
+	line = line.lower()
+	line = re.sub(r'[^a-z\' ]', '', line)
+	return line
 
 def keep_token(token):
 	'''
 	Takes a single token and returns False if it should be discarded, 
 	otherwise true
 	'''
-	#return re.search(r'[a-z\']', token
-	return token != ''
+	# since bad chars have already been removed, just check if empty
+	return bool(token)
 
 def parse_tokens():
-	tokens = []
-	sentence = []
+	tokens = [] # holds all words
+	sentence = [] # holds current sentence
 
 	# open file and loop through each line
 	with open('100-0.txt', 'r') as fin:
 		for line in fin:
-			tokens.append('<s>') # start of line
-			sentence = [normalize_token(i) for i in line.split(' ')] # get tokens and normalize
-			for word in sentence:
-				if keep_token(word):
-					tokens.append(word)
-			tokens.append('</s>') # end of line
+			sentence = normalize_line(line) # remove bad characters
+			sentence = [i for i in sentence.split(' ') if keep_token(i)] # get tokens and remove bad ones
+
+			if len(sentence) > 0 : # if sentence is not empty
+				tokens.append(START_TAG) # start of line
+				tokens.extend(sentence) # tokens
+				tokens.append(END_TAG) # end of line
 
 	return tokens
 
-
-
-
-
-
-
 def count_ngrams(all_words, N):
 	'''
-	Counts ngrams - NOT for unigrams
+	Counts ngrams in the all_words list of words. 
+	Returns dictionary in the form (ngram_tuple : count) and total count of ngrams
 	'''
-	ngram_counts = {} # dict of dicts of the form {(n-1 first words tuple) : {lasttoken : occurences}}
-	first_words_counts = {} # dict of {(n-1 first words tuple) : occurences}
-	num_unique_ngrams = 0 # total number of unique ngrams
-	sentence_start_ngrams = {} # dict to hold ngrams that start with <s> -> {(n-1 last words tuple) : occurences}
-	num_sentence_start_ngrams = 0
+	ngram_counts = {} 
+	total_count = 0
 
-	#CHECK IF LENGTH of all_words is >= N
+	# make sure min length is met
 	if len(all_words) >= N:
 		for i in range(len(all_words) - (N-1)):
-			first_words = tuple(all_words[i:i+N-1]); # first n-1 words
-			last_word = all_words[i+N-1] # new word
+			ngram = tuple(all_words[i:i+N]) # get current ngram
 
-			# add to ngram_counts
-			if first_words in ngram_counts:
-				if last_word in ngram_counts[first_words]:
-					ngram_counts[first_words][last_word] += 1;
+			# only record tags that don't have sentence markers in the middle
+			if START_TAG not in ngram[1:] \
+				and END_TAG not in ngram[:-1] \
+				and not (START_TAG == ngram[0] and END_TAG == ngram[N-1]):
+
+				# increment count and update count in dict
+				total_count += 1 
+				if ngram in ngram_counts: 
+					ngram_counts[ngram] += 1
 				else:
-					ngram_counts[first_words][last_word] = 1;
-					num_unique_ngrams += 1
-			else:
-				ngram_counts[first_words] = {}
-				ngram_counts[first_words][last_word] = 1;
-				num_unique_ngrams += 1
+					ngram_counts[ngram] = 1
 
-			# add count to total word counts dict
-			if first_words in first_words_counts:
-				first_words_counts[first_words] += 1
-			else:
-				first_words_counts[first_words] = 1
+	return ngram_counts, total_count
 
-			# possibly add to dict of ngrams that start with <s> -> OR JUST WHEN GENERATING LOOP UNTIL NGRAM IS CHOSEN THAT STARTS WITH <s>????
-			if first_words[0] == '<s>':
-				num_sentence_start_ngrams += 1
-				last_words = tuple(all_words[i+1:i+N])
-				if last_words in sentence_start_ngrams:
-					sentence_start_ngrams[last_words] += 1
-				else:
-					sentence_start_ngrams[last_words] = 1
-
-	return ngram_counts, first_words_counts, sentence_start_ngrams, num_sentence_start_ngrams
-#ALSO NEED DICT TO HOLD COUNTS OF NGRAMS THAT ALL START WITH <s> !!!!!!!!!!
-
-#def count_unigrams(all_words):
-	# insert robert's code here
-
-def calc_ngram_frequencies(ngram_counts, first_words_counts):
-	#SORT EACH INNER DICT???????????????
-
-	ngram_cumulative_freqs = {} 
-
-	for first_words in ngram_counts:
-		cumulative_count = 0
-		counts = ngram_counts[first_words] #dict of counts for each ngram
-		ngram_cumulative_freqs[first_words] = OrderedDict() # create new ordered dict to hold cumulative frequences
-
-		for last_word in counts:
-			ngram_freq = counts[last_word] / first_words_counts[first_words]
-			cumulative_count += ngram_freq
-			ngram_cumulative_freqs[first_words][cumulative_count] =  last_word
-
-	return ngram_cumulative_freqs
-
-def calc_start_ngram_frequencies(sentence_start_ngrams, ngram_cumulative_freqs):
-	sentence_start_ngram_cumulative_freqs = OrderedDict()
-	cumulative_count = 0
-
-	for ngram in sentence_start_ngrams:
-		freq = sentence_start_ngrams[ngram] / ngram_cumulative_freqs
-		cumulative_count += freq
-		sentence_start_ngram_cumulative_freqs[cumulative_count] = ngram
-
-	return sentence_start_ngram_cumulative_freqs
-
-
-
-
-
-
-def count_unigrams(all_words):
+def calc_ngram_frequencies(ngram_counts, total_ngrams):
 	'''
-	Takes a list of tokens and generates a frequency map 
-	in the format: {'token': occurrences}
-	'''
-	unigram_counts = {}
-
-	for word in all_words:
-		if word in unigram_counts:
-			unigram_counts[word] += 1
-		else:
-			unigram_counts[word] = 1
-
-	return unigram_counts
-
-def calc_unigram_frequencies(unigram_counts, total_unigrams):
-	'''
-	Using a frequency map and total token count, generates an ordered
-	dict in the format {cumulative_probability: 'token'}
+	Calculates the cumulative frequencies of the ngrams.
+	Returns an ordered dictionary in the form (cumulative_prob: ngram_tuple)
 	'''
 	cumulative_count = 0
 	frequencies = OrderedDict()
 
 	# for each type, calculate frequency -> cumulative probability,
 	# and add to the ordered dict
-	for typ in unigram_counts.iterkeys():
-		type_freq = unigram_counts[typ] / total_unigrams
-		cumulative_count += type_freq
-		frequencies[cumulative_count] = typ
+	for ngram in ngram_counts:
+		ngram_freq = ngram_counts[ngram] / total_ngrams
+		cumulative_count += ngram_freq
+		frequencies[cumulative_count] = ngram
 
 	return frequencies
 
-
-
-
-
-
-
-
-
-
-
-
-def generate_word(frequencies):
+def generate_ngram(frequencies):
 	'''
 	Uses the ordered dict of cumulative probabilities to generate a
 	random word using the Bogensberger-Johnson technique
 	'''
-	point = random.random()
+	rand = random.random()
 	for prob in frequencies.keys():
-		if prob > point:
+		if prob > rand:
 			return frequencies[prob]
 
 	return None
 
-def generate_sentence(frequencies):
+def generate_sentence(frequencies, N, show_tags, num_ngrams):
 	'''
-	Generates 10 random words, capitalizes the first, and ends the
-	sentence with a period
+	Generates num_ngrams ngrams, capitalizes the first, and ends the
+	sentence with a period. Includes sentence markers if show_tags is true.
 	'''
-	sentence = generate_word(frequencies).title()
-	for i in range(9):
-		sentence += ' ' + generate_word(frequencies)
+	sentence = ""
 
-	sentence += '.'
-	return sentence
+	# generate first ngram
+	first_ngram = generate_ngram(frequencies)
 
+	if N == 1: # for unigrams
+		# loop through unigrams to generate
+		for i in range(num_ngrams):
+			# generate next unigram
+			ngram = generate_ngram(frequencies)
+			
+			# loop until ngram doesn't include sentence marker
+			while (START_TAG in ngram) or (END_TAG in ngram):
+				ngram = generate_ngram(frequencies)
 
+			# add ngram to sentence
+			sentence += ' ' + ' '.join(ngram)
+	
+	elif N > 1: # for ngrams, not unigrams
+		# loop until we have a start sentence marker
+		while first_ngram[0] != START_TAG:
+			first_ngram = generate_ngram(frequencies)
 
+		# add first ngram and capitalize
+		sentence += ' ' + ' '.join(first_ngram[1:])
 
+		# add ngrams in the middle of the sentence
+		for i in range(num_ngrams - 2):
+			ngram = generate_ngram(frequencies)
 
+			# loop until ngram has no sentence markers, then add to sentence
+			while (START_TAG in ngram) or (END_TAG in ngram):
+				ngram = generate_ngram(frequencies)
+			
+			sentence += ' ' + ' '.join(ngram)
+		
+		# last ngram
+		last_ngram = generate_ngram(frequencies)
 
+		# loop until we have end sentence marker and add to sentence
+		while last_ngram[N-1] != END_TAG:
+			last_ngram = generate_ngram(frequencies)
 
+		sentence += ' ' + ' '.join(last_ngram[0:N-1])
 
+	# start and end to string
+	start = ''
+	end = '.'
+	if show_tags:
+		start += START_TAG + ' '
+		end += ' ' + END_TAG
+		
+	return start + sentence[1:].capitalize() + end
+
+def get_sentence_marker_preference():
+	'''
+	Get user's preference as to whether to display sentence markers.
+	Returns boolean value
+	'''
+	# Prompt for yes or no 
+	user_input = raw_input("Display Sentence Markers (y/n): ")
+	checking_input = True
+	
+	# loop until valid input is provided
+	while checking_input:
+		val = user_input.strip('"\'').lower() # get and clean input
+		
+		# if invalid input try again, otherwise return choice
+		if val != 'y' and val != 'n': 
+			print("Invalid input")
+			user_input = raw_input("Display Sentence Markers (y/n): ")
+			checking_input = True
+		else:
+			display_sentence_markers = (val == 'y')
+			checking_input = False
+
+	return display_sentence_markers
 
 def main():
+	# get user's show marker preference
+	show_sentence_markers = get_sentence_marker_preference()
+
 	# get lowercase list of all words
 	tokens = parse_tokens()
 
-	print tokens
+	print("\nN-grams: ")
 
-	counts, main_counts, start_ngrams, start_count = count_ngrams(tokens, 3)
+	# loop through unigrams to quadgrams
+	for i in range(1,5):
+		# print ngram number
+		print("\nN = " + str(i));
 
-	print start_ngrams
+		# count the ngrams
+		ngram_counts, total_count = count_ngrams(tokens, i)
 
-	ngram_freqs = calc_ngram_frequencies(counts, main_counts)
+		# calc the frequencies
+		ngram_freqs = calc_ngram_frequencies(ngram_counts, total_count)
 
-	print ""
-	print "Cumulative:"
-	print ngram_freqs
+		# generate 5 line
+		for j in range(5):
+			print(generate_sentence(ngram_freqs, i, show_sentence_markers, (int) (12/i)))
 
-	sent_start_freqs = calc_start_ngram_frequencies(start_ngrams, start_count)
-	print sent_start_freqs
-
-	# get frequency map of how many times each type is seen
-	#type_counts = count_types(tokenized)
-
-	# create cumulative probability ordered dict
-	#frequencies = create_frequencies(type_counts, len(tokenized))
-
-	#print 5 randomly generated sentences
-	#for i in range(5):
-	#	print(generate_sentence(frequencies))
 
 
 # entry point for the program
