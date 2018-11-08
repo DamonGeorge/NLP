@@ -15,7 +15,7 @@ import pickle
 START_TAG = '<s>'
 END_TAG = '</s>'
 # filenames
-PICKLE_FILENAME = 'proj7.pkl'
+PICKLE_FILENAME = 'proj7b.pkl'
 
 def generate_ngram(frequencies):
 	'''

@@ -20,7 +20,7 @@ START_TAG = '<s>'
 END_TAG = '</s>'
 # filenames
 TEXT_FILENAME = 'shakespeare.txt'
-PICKLE_FILENAME = 'proj7.pkl'
+PICKLE_FILENAME = 'proj7b.pkl'
 
 def normalize_line(line):
 	'''
