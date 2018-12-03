@@ -1,0 +1,78 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.9248125 
+tiers? <exists> 
+size = 4 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "name" 
+        xmin = 0 
+        xmax = 2.9248125 
+        intervals: size = 1 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.9248125 
+            text = "Damon George & Robert Brajcich" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "orthTrans" 
+        xmin = 0 
+        xmax = 2.9248125 
+        intervals: size = 1 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.9248125 
+            text = "  she had ____ in greasy wash water all year" 
+    item [3]:
+        class = "TextTier" 
+        name = "fricatives" 
+        xmin = 0 
+        xmax = 2.9248125 
+        points: size = 6 
+        points [1]:
+            number = 0.18272783861665157 
+            mark = "sh" 
+        points [2]:
+            number = 0.384563873159753 
+            mark = "h" 
+        points [3]:
+            number = 0.5863999077028544 
+            mark = "sh" 
+        points [4]:
+            number = 1.0039064732002776 
+            mark = "s" 
+        points [5]:
+            number = 1.5996889924635507 
+            mark = "s" 
+        points [6]:
+            number = 1.9921319206570238 
+            mark = "sh" 
+    item [4]:
+        class = "IntervalTier" 
+        name = "phonesTrans" 
+        xmin = 0 
+        xmax = 2.9248125 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.18272783861665157 
+            text = "" 
+        intervals [2]:
+            xmin = 0.18272783861665157 
+            xmax = 0.36979538282733093 
+            text = "she" 
+        intervals [3]:
+            xmin = 0.36979538282733093 
+            xmax = 0.5691700023150287 
+            text = "had" 
+        intervals [4]:
+            xmin = 0.5691700023150287 
+            xmax = 1.305133103880728 
+            text = "????" 
+        intervals [5]:
+            xmin = 1.305133103880728 
+            xmax = 2.9248125 
+            text = "" 
