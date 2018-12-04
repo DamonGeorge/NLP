@@ -21,11 +21,55 @@ item []:
         name = "orthTrans" 
         xmin = 0 
         xmax = 2.9248125 
-        intervals: size = 1 
+        intervals: size = 12 
         intervals [1]:
             xmin = 0 
+            xmax = 0.18272783861665157 
+            text = "" 
+        intervals [2]:
+            xmin = 0.18272783861665157 
+            xmax = 0.384563873159753 
+            text = "she" 
+        intervals [3]:
+            xmin = 0.384563873159753 
+            xmax = 0.5863999077028544 
+            text = "had" 
+        intervals [4]:
+            xmin = 0.5863999077028544 
+            xmax = 0.7579722342825765 
+            text = "your" 
+        intervals [5]:
+            xmin = 0.7579722342825765 
+            xmax = 1.0178282959201324 
+            text = "dark" 
+        intervals [6]:
+            xmin = 1.0178282959201324 
+            xmax = 1.3086452147873968 
+            text = "suit" 
+        intervals [7]:
+            xmin = 1.3086452147873968 
+            xmax = 1.4243014551066497 
+            text = "in" 
+        intervals [8]:
+            xmin = 1.4243014551066497 
+            xmax = 1.7705330412588347 
+            text = "greasy" 
+        intervals [9]:
+            xmin = 1.7705330412588347 
+            xmax = 2.096459296924633 
+            text = "wash" 
+        intervals [10]:
+            xmin = 2.096459296924633 
+            xmax = 2.351689712556519 
+            text = "water" 
+        intervals [11]:
+            xmin = 2.351689712556519 
+            xmax = 2.5342189114374034 
+            text = "all" 
+        intervals [12]:
+            xmin = 2.5342189114374034 
             xmax = 2.9248125 
-            text = "  she had ____ in greasy wash water all year" 
+            text = "year" 
     item [3]:
         class = "TextTier" 
         name = "fricatives" 
@@ -34,22 +78,22 @@ item []:
         points: size = 6 
         points [1]:
             number = 0.18272783861665157 
-            mark = "sh" 
+            mark = "SH" 
         points [2]:
             number = 0.384563873159753 
-            mark = "h" 
+            mark = "HH" 
         points [3]:
             number = 0.5863999077028544 
-            mark = "sh" 
+            mark = "CH" 
         points [4]:
-            number = 1.0039064732002776 
-            mark = "s" 
+            number = 1.0178282959201324 
+            mark = "S" 
         points [5]:
             number = 1.5996889924635507 
-            mark = "s" 
+            mark = "S" 
         points [6]:
             number = 1.9921319206570238 
-            mark = "sh" 
+            mark = "SH" 
     item [4]:
         class = "IntervalTier" 
         name = "phonesTrans" 
@@ -62,17 +106,17 @@ item []:
             text = "" 
         intervals [2]:
             xmin = 0.18272783861665157 
-            xmax = 0.36979538282733093 
-            text = "she" 
+            xmax = 0.38505115845684434 
+            text = "SH IY" 
         intervals [3]:
-            xmin = 0.36979538282733093 
-            xmax = 0.5691700023150287 
-            text = "had" 
+            xmin = 0.38505115845684434 
+            xmax = 0.5873155384077632 
+            text = "HH AE D" 
         intervals [4]:
-            xmin = 0.5691700023150287 
-            xmax = 1.305133103880728 
-            text = "????" 
+            xmin = 0.5873155384077632 
+            xmax = 0.7626948510219315 
+            text = "CH UH" 
         intervals [5]:
-            xmin = 1.305133103880728 
+            xmin = 0.7626948510219315 
             xmax = 2.9248125 
             text = "" 
